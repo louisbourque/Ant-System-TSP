@@ -112,6 +112,7 @@ function init(){
 		message.act = "init";
 		message.data = config;
 		worker.postMessage(JSON.stringify(message));
+		start();
 	});
 }
 
@@ -186,7 +187,7 @@ function draw_state(){
 
 //start the simulation
 function start(){
-	if(typeof(worker) == 'undefined') return;
+	if(typeof(worker) == 'undefined') init();
 	var message = new Object();
 	message.act = "start";
 	worker.postMessage(JSON.stringify(message));

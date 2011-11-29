@@ -106,6 +106,7 @@ onmessage = function(event) {
 			}
 			gamestate.runCount = 0;
 			gamestate.tripCount = 0;
+			gamestate.hasChanged = true;
 			var message = new Object();
 			message.act = "update";
 			message.data = new Object();
@@ -125,6 +126,7 @@ onmessage = function(event) {
 function run(){
 	if(tock_count <= 0){
 		gamestate.runCount++;
+		gamestate.hasChanged = true;
 		
 		if(finished_count >= gamestate.aircraft.length || gamestate.runCount > config.max_run_time){
 			for(var i = 0;i<gamestate.aircraft.length;i++){

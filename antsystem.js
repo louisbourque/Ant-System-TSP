@@ -14,13 +14,14 @@ function Plane(x,y,id){
 	this.destination;
 }
 
+var canvas;
 var ctx;
 //config object used to set the parameters of the game. This object is passed to the worker thread to initialize it
 var config = new Object();
 config.grid_x = 900;
 config.grid_y = 600;
-config.num_planes = 60;
-config.num_nodes = 50;
+config.num_planes = 15;
+config.num_nodes = 30;
 config.range = 600;
 config.max_run_time = 10000;
 config.max_trips = 10;
@@ -37,7 +38,12 @@ var shortest_tour = [];
 
 //start the run loop
 function init(){
-	ctx = document.getElementById('canvas').getContext("2d");
+	canvas = document.getElementById('canvas');
+	ctx = canvas.getContext("2d");
+	(function animloop(){
+      requestAnimFrame(animloop, canvas);
+      draw_state();
+    })();
 	if(typeof(worker) != 'undefined') worker.terminate();
 	$.get($('#tsp_map').val()+'.txt', function(data){
 		shortest_tour = [];
@@ -98,7 +104,6 @@ function handle_worker_message(data){
 	}
 	if(resultObj.act == "update"){
 		gamestate = resultObj.data.gamestate;
-		draw_state();
 		if(typeof(resultObj.data.shortest_tour_length) != 'undefined' && resultObj.data.shortest_tour_length != 99999){
 			$('#result').html("Best path so far: "+resultObj.data.shortest_tour.join("->")+" with a length of "+resultObj.data.shortest_tour_length);
 			shortest_tour = resultObj.data.shortest_tour;
@@ -111,6 +116,8 @@ function handle_worker_message(data){
 }
 
 function draw_state(){
+	if(typeof(gamestate) == 'undefined' || !gamestate.hasChanged){return;}
+	gamestate.hasChanged = false;
 	ctx.clearRect(0, 0, config.grid_x, config.grid_y);
 	ctx.fillStyle = "#000";
 	
@@ -156,6 +163,19 @@ function draw_state(){
 	}
 	$('#stats').html("Time: <strong>"+ gamestate.runCount + "<\/strong>, trips completed: <strong>" + gamestate.tripCount + "<\/strong>");
 }
+
+// shim layer with setTimeout fallback
+    window.requestAnimFrame = (function(){
+      return  window.requestAnimationFrame       || 
+              window.webkitRequestAnimationFrame || 
+              window.mozRequestAnimationFrame    || 
+              window.oRequestAnimationFrame      || 
+              window.msRequestAnimationFrame     || 
+              function(/* function */ callback, /* DOMElement */ element){
+                window.setTimeout(callback, 1000 / 60);
+              };
+    })();
+
 
 //start the simulation
 function start(){

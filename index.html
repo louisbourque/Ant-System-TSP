@@ -1,6 +1,8 @@
 <html>
 <head><title>Ant System TSP</title>
 <meta name=viewport content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="css/normalize.css">
+<link rel="stylesheet" href="css/h5bp.css">
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="antsystem.js"></script>
 <script>
@@ -36,6 +38,8 @@
 <p>The goal of this application is to design an ant system which can be used to solve the Travelling Salesman Problem. This application uses air travel as the metaphor and places a restriction on the distance that a plane can travel from one city to another. This restriction means that some cities may need to be visited more than once. Some cities do not need to be visited, and are optional.</p>
 <h2>How it works</h2>
 <p>Ants travel from city to city, leaving a pheromone trail (blue). The shorter the total path, the stronger the pheromone. Ants use the strength of the pheromone as a factor when deciding which path to follow. This favors shorter paths, so they are more likely to be followed, strengthening short tours. The shortest tour of the current generation is shown in yellow.</p>
-
+<footer>
+	Built by <a href="http://louisbourque.ca/">Louis Bourque</a>.
+</footer>
 </body>
 </html>
